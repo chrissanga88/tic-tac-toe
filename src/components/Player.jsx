@@ -1,11 +1,16 @@
 import { useState } from 'react';
 
-export default function Player( { initialName, symbol }) {
+export default function Player( { initialName, symbol, isActive, onChangeName }) {
   const [ playerName, setPlayerName ] = useState(initialName);
   const [ isEditing, setIsEdition ] = useState(false);
 
   function handleEditClick() {
     setIsEdition(editing => !editing);
+    // if isEditing is true that means the button was just pressed to stop editing and therefore we want to trigger the onChangeName function to update the player's name
+    if (isEditing) {
+      onChangeName(symbol,playerName);
+    }
+    
     /*
       setIsEdition(!isEditing) is better than using isEditing ? setIsEdition(false) : setIsEdition(true) but 
       in react when updating state based on the previous value of that state, it is best practice to pass a function
@@ -22,7 +27,7 @@ export default function Player( { initialName, symbol }) {
   }
 
   return(
-    <li>
+    <li className={isActive ? "active" : undefined}>
       <span className="player">
         {!isEditing ? <span className="player-name">{playerName}</span> : <input type="text" required value={playerName}onChange={handleNameChange}></input>}
         <span className="player-symbol">{symbol}</span>
